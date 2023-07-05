@@ -1,0 +1,39 @@
+#include <DHT.h>
+
+// Define o tipo de sensor DHT
+#define DHTPIN 7
+#define DHTTYPE DHT11
+
+// Inicializa o objeto DHT
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  // Inicializa a comunicação serial
+  Serial.begin(9600);
+
+  // Inicializa o sensor DHT
+  dht.begin();
+}
+
+void loop() {
+  // Lê a umidade e a temperatura do sensor
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+
+  // Verifica se a leitura foi bem-sucedida
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println("Falha ao ler os dados do sensor.");
+    return;
+  }
+
+  // Exibe os valores de umidade e temperatura no monitor serial
+  Serial.print("Umidade: ");
+  Serial.print(humidity);
+  Serial.print(" %\t");
+  Serial.print("Temperatura: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+
+  // Aguarda 2 segundos antes de realizar uma nova leitura
+  delay(2000);
+}
