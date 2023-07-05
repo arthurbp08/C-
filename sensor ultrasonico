@@ -1,15 +1,16 @@
-#define echo 
-#define trig
+#define echo 4
+#define trig 8
 
 unsigned long tempo;
 double distancia;
 
 void setup(){
-  pinMode(trig,output);
-  pinMode(echo,input);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
   
   Serial.begin(9600);
-  digitalwrite(trig, LOW);
+
+  digitalWrite(trig, LOW);
 
 }
 void loop(){
@@ -17,10 +18,15 @@ void loop(){
     delayMicroseconds(10);
     digitalWrite(trig, LOW);
 
-tempo = pulseIn(echo, HIGH);
-distancia = tempo/58  
-Serial.println(distancia);
+  tempo = pulseIn(echo, HIGH);
 
-delay(500);
+  distancia = tempo/58; //58 é uma aproximação que assume uma velocidade média do som de 343 metros por segundo,
+                        //que é uma estimativa aproximada da velocidade do som no ar.
+                        //Dividindo o tempo medido em microssegundos por 58,
+                        // obtemos uma distância aproximada em centímetros.
+
+  Serial.println(distancia);
+
+  delay(500);
 
 }
