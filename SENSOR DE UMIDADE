@@ -1,39 +1,50 @@
 #include <DHT.h>
 
-// Define o tipo de sensor DHT
-#define DHTPIN 7
-#define DHTTYPE DHT11
+// Defina o tipo do sensor DHT22  (ou DHT11, se estiver usando esse modelo)
+#define DHT_PIN 2      // Pino digital ao qual o sensor está conectado
+#define DHT_TYPE DHT22 // Tipo do sensor DHT22
 
-// Inicializa o objeto DHT
-DHT dht(DHTPIN, DHTTYPE);
+// Inicializa o sensor DHT
+DHT dht(DHT_PIN, DHT_TYPE);
 
 void setup() {
-  // Inicializa a comunicação serial
   Serial.begin(9600);
-
-  // Inicializa o sensor DHT
   dht.begin();
 }
 
 void loop() {
-  // Lê a umidade e a temperatura do sensor
+  // Leitura da umidade relativa e temperatura do sensor
   float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature();
+  float temperatureCelsius = dht.readTemperature();
 
   // Verifica se a leitura foi bem-sucedida
-  if (isnan(humidity) || isnan(temperature)) {
-    Serial.println("Falha ao ler os dados do sensor.");
-    return;
+  if (isnan(humidity) || isnan(temperatureCelsius)) {
+    Serial.println("Falha ao ler o sensor DHT!");
+  } else {
+    // Exibe os resultados na porta serial em Celsius
+    Serial.print("Umidade: ");
+    Serial.print(humidity);
+    Serial.print("%\t");
+
+    Serial.print("Temperatura (Celsius): ");
+    Serial.print(temperatureCelsius);
+    Serial.print("°C\t");
+
+    // Convertendo a temperatura para Fahrenheit
+    float temperatureFahrenheit = (temperatureCelsius * 9.0 / 5.0) + 32.0;
+    Serial.print("Temperatura (Fahrenheit): ");
+    Serial.print(temperatureFahrenheit);
+    Serial.print("°F\t");
+
+    // Convertendo a temperatura para Kelvin
+    float temperatureKelvin = temperatureCelsius + 273.15;
+    Serial.print("Temperatura (Kelvin): ");
+    Serial.print(temperatureKelvin);
+    Serial.print("K");
+
+    Serial.println(); // Nova linha para melhorar a legibilidade
   }
 
-  // Exibe os valores de umidade e temperatura no monitor serial
-  Serial.print("Umidade: ");
-  Serial.print(humidity);
-  Serial.print(" %\t");
-  Serial.print("Temperatura: ");
-  Serial.print(temperature);
-  Serial.println(" °C");
-
-  // Aguarda 2 segundos antes de realizar uma nova leitura
+  // Aguarda alguns segundos antes de fazer uma nova leitura
   delay(2000);
 }
