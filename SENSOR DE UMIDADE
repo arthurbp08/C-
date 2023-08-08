@@ -1,11 +1,9 @@
 #include <DHT.h>
 
-// Defina o tipo do sensor DHT22  (ou DHT11, se estiver usando esse modelo)
-#define DHT_PIN 2      // Pino digital ao qual o sensor está conectado
-#define DHT_TYPE DHT22 // Tipo do sensor DHT22
+#define DHTPIN 2        // Pino digital onde o sensor está conectado
+#define DHTTYPE DHT22   // Tipo do sensor, pode ser DHT11, DHT21 ou DHT22
 
-// Inicializa o sensor DHT
-DHT dht(DHT_PIN, DHT_TYPE);
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   Serial.begin(9600);
@@ -13,38 +11,30 @@ void setup() {
 }
 
 void loop() {
-  // Leitura da umidade relativa e temperatura do sensor
-  float humidity = dht.readHumidity();
-  float temperatureCelsius = dht.readTemperature();
+  // Lê a temperatura em graus Celsius
+  float tempC = dht.readTemperature();
 
   // Verifica se a leitura foi bem-sucedida
-  if (isnan(humidity) || isnan(temperatureCelsius)) {
-    Serial.println("Falha ao ler o sensor DHT!");
-  } else {
-    // Exibe os resultados na porta serial em Celsius
-    Serial.print("Umidade: ");
-    Serial.print(humidity);
-    Serial.print("%\t");
-
-    Serial.print("Temperatura (Celsius): ");
-    Serial.print(temperatureCelsius);
-    Serial.print("°C\t");
-
-    // Convertendo a temperatura para Fahrenheit
-    float temperatureFahrenheit = (temperatureCelsius * 9.0 / 5.0) + 32.0;
-    Serial.print("Temperatura (Fahrenheit): ");
-    Serial.print(temperatureFahrenheit);
-    Serial.print("°F\t");
-
-    // Convertendo a temperatura para Kelvin
-    float temperatureKelvin = temperatureCelsius + 273.15;
-    Serial.print("Temperatura (Kelvin): ");
-    Serial.print(temperatureKelvin);
-    Serial.print("K");
-
-    Serial.println(); // Nova linha para melhorar a legibilidade
+  if (isnan(tempC)) {
+    Serial.println("Erro ao ler o sensor DHT!");
+    return;
   }
 
-  // Aguarda alguns segundos antes de fazer uma nova leitura
+  // Converte a temperatura para Fahrenheit, Kelvin e exibe os valores
+  float tempF = (tempC * 9.0 / 5.0) + 32.0;
+  float tempK = tempC + 273.15;
+
+  Serial.print("Temperatura em Celsius: ");
+  Serial.print(tempC);
+  Serial.print(" °C\t");
+
+  Serial.print("Temperatura em Fahrenheit: ");
+  Serial.print(tempF);
+  Serial.print(" °F\t");
+
+  Serial.print("Temperatura em Kelvin: ");
+  Serial.print(tempK);
+  Serial.println(" K");
+
   delay(2000);
 }
